@@ -1,0 +1,23 @@
+{% extends "base_app.html" %}
+
+{% block title %}Add Task{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Add a New Task</h2>
+    <form method="post" action="/add-task">
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required>
+
+        <label for="assignee">Assign to:</label>
+        <select id="assignee" name="assignee">
+            <option value="all">All Household Members</option>
+            {% for member in household_members %}
+                <option value="{{ member[0] }}">{{ member[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Add Task</button>
+    </form>
+</div>
+{% endblock %}

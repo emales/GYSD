@@ -1,43 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Your Tasks</title>
-    <link rel="stylesheet" href="/static/style.css" />
-</head>
-<body>
-    <a href="/logout" class="logout-btn">Logout</a>
-    <div class="main-flex">
-        <div class="container">
-            <h1>Hi {{ user_name }}, here are your tasks:</h1>
-            {% if tasks %}
-                <ul class="task-list">
-                    {% for task in tasks %}
-                        <li class="{% if task[2] %}completed{% endif %}">
-                            {{ task[1] }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>You have no tasks assigned.</p>
-            {% endif %}
-        </div>
-        <div class="add-task-panel">
-            <h2>Add Task</h2>
-            <form method="post" action="/add-task">
-                <label for="description">Description:</label>
-                <input type="text" id="description" name="description" required>
-                <label for="assignee">Assign to:</label>
-                <select id="assignee" name="assignee">
-                    <option value="all">All</option>
-                    {% for user in users %}
-                        <option value="{{ user[0] }}">{{ user[1] }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Add Task</button>
-            </form>
-        </div>
-    </div>
-</body>
-</html>
+{% extends "base_app.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <h1>Hi {{ user_name }}, here are your tasks:</h1>
+    {% if tasks %}
+        <ul class="task-list">
+            {% for task in tasks %}
+                <li class="{% if task[2] %}completed{% endif %}">
+                    {{ task[1] }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no tasks assigned.</p>
+    {% endif %}
+</div>
+{% endblock %}
