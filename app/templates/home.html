@@ -5,16 +5,66 @@
 {% block content %}
 <div class="content-container">
     <h1>Hi {{ user_name }}, here are your tasks:</h1>
-    {% if tasks %}
+
+    <h2>Tasks for Today</h2>
+    {% if tasks_today %}
         <ul class="task-list">
-            {% for task in tasks %}
-                <li class="{% if task[2] %}completed{% endif %}">
-                    {{ task[1] }}
+            {% for task in tasks_today %}
+                <li>
+                    <input type="checkbox" onchange="completeTask({{ task[0] }})">
+                    {{ task[1] }} (Due: {{ task[2] }})
                 </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>You have no tasks assigned.</p>
+        <p>No tasks due today.</p>
+    {% endif %}
+
+    <h2>Tasks for This Week</h2>
+    {% if tasks_week %}
+        <ul class="task-list">
+            {% for task in tasks_week %}
+                <li>
+                    <input type="checkbox" onchange="completeTask({{ task[0] }})">
+                    {{ task[1] }} (Due: {{ task[2] }})
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No other tasks due this week.</p>
+    {% endif %}
+
+    <h2>Other Tasks</h2>
+    {% if tasks_other %}
+        <ul class="task-list">
+            {% for task in tasks_other %}
+                 <li>
+                    <input type="checkbox" onchange="completeTask({{ task[0] }})">
+                    {{ task[1] }} (Due: {{ task[2] }})
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No other tasks.</p>
     {% endif %}
 </div>
+
+<script>
+    function completeTask(taskAssignmentId) {
+        fetch('/complete-task/' + taskAssignmentId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                // Reload the page to see the updated task lists
+                window.location.reload();
+            } else {
+                alert('Failed to complete task.');
+            }
+        });
+    }
+</script>
 {% endblock %}

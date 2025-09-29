@@ -7,11 +7,14 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     env_file:
       - .env
     volumes:
       - .:/app
+    networks:
+      - gysd_network
 
   db:
     image: postgres:14
@@ -21,7 +24,31 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-    - "5432:5432"
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gysd_network
+  
+  scheduler:
+    build:
+      context: .
+      dockerfile: scheduler.Dockerfile
+    container_name: GYSD_scheduler
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    networks:
+      - gysd_network
 
 volumes:
   pgdata:
+
+networks:
+  gysd_network:
+    driver: bridge

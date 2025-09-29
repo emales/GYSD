@@ -17,7 +17,41 @@
             {% endfor %}
         </select>
 
+        <label for="frequency">Frequency:</label>
+        <select id="frequency" name="frequency" onchange="toggleCustomFrequency(this.value)">
+            <option value="One time">One time</option>
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+            <option value="Custom">Custom</option>
+        </select>
+
+        <div id="custom-frequency-fields" style="display: none;">
+            <label for="custom_frequency_value">Every:</label>
+            <input type="number" id="custom_frequency_value" name="custom_frequency_value" min="1" value="1">
+            <select id="custom_frequency_unit" name="custom_frequency_unit">
+                <option value="day">Day(s)</option>
+                <option value="week">Week(s)</option>
+                <option value="month">Month(s)</option>
+                <option value="year">Year(s)</option>
+            </select>
+        </div>
+        
+        <label for="deadline">Deadline (for 'One time' tasks):</label>
+        <input type="date" id="deadline" name="deadline">
+
         <button type="submit">Add Task</button>
     </form>
 </div>
+
+<script>
+    function toggleCustomFrequency(value) {
+        var customFields = document.getElementById('custom-frequency-fields');
+        if (value === 'Custom') {
+            customFields.style.display = 'block';
+        } else {
+            customFields.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}

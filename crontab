@@ -1,0 +1,2 @@
+# Run the ETL job every day at midnight
+0 0 * * * python /app/etl_job.py >> /var/log/cron.log 2>&1
